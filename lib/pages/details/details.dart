@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../search/search.dart';
 
 class DetailPage extends StatelessWidget {
   @override
