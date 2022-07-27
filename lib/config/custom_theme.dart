@@ -12,11 +12,10 @@ class CustomWidgetTheme {
           style: ElevatedButton.styleFrom(
               elevation: 0,
               splashFactory: NoSplash.splashFactory,
-              // primary: Palette.pebbleBlack,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(100)))),
 
-      // Color Theme
+      // Color Theming
       colorScheme: const ColorScheme.light(
           primary: Palette.pebbleBlack, secondary: Palette.shadowGray),
     );
@@ -25,8 +24,6 @@ class CustomWidgetTheme {
 
 class CustomTextTheme {
   static ThemeData get lightTheme {
-    return ThemeData(
-      textTheme: TextTheme()
-    );
+    return ThemeData(textTheme: TextTheme());
   }
 }
