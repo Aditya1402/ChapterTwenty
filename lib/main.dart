@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Seventh Word',
       theme: CustomWidgetTheme.lightTheme,
-      home: Cards(),
+      home: HomePage(),
       onGenerateRoute: RouteGenerator.generateRoute,
     );
   }

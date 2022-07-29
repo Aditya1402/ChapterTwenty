@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:seventh_word/domain/custom_widgets/appBar.dart';
 import 'package:seventh_word/domain/services/remote_service.dart';
 
@@ -8,15 +9,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  // Calling fetchBooks() in initState() because we want it to process
-  // when application first starts
-  // var result;
-  // @override
-  // void initState() {
-  //   // TODO: implement initState
-  //   super.initState();
-  //   result = RemoteService().fetchBooks("Fitness");
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +16,7 @@ class _HomePageState extends State<HomePage> {
       appBar: CustomAppBar(),
       body: Center(
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: MainAxisSize.max,
           children: <Widget>[
             Text("Home Page"),
             ElevatedButton(
@@ -37,6 +29,7 @@ class _HomePageState extends State<HomePage> {
                   Navigator.of(context).pushNamed('/detailPage');
                 },
                 child: Text("Go to Detail Page")),
+                
 
           ],
         ),
