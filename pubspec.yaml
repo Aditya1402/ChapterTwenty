@@ -34,6 +34,7 @@ dependencies:
   flutter_native_splash: ^2.2.6
   flutter_svg: ^1.1.1+1
   http: ^0.13.4
+  intl: ^0.17.0
   lottie: ^1.4.0
 
 dev_dependencies:
@@ -91,6 +92,6 @@ flutter_icons:
 
 flutter_native_splash:
   color: "#1E1E1E"
-  background_image: "lib/config/images/splash_screen.png"
+  image: "lib/config/images/splash_screen.png"
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

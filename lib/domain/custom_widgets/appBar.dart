@@ -12,7 +12,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: Palette.anchorGray,
       centerTitle: true,
       title: SvgPicture.asset(
-        'lib/config/images/Logo.svg',
+        'lib/config/images/AppIcon.svg',
         width: 70,
       ),
     );

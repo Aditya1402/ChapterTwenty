@@ -111,7 +111,7 @@ class _CardsState extends State<Cards> {
   Widget build(BuildContext context) {
     return Scaffold(
         body: _firstLoadRunning
-            ? const Center(child: CircularProgressIndicator())
+            ? Center(child: LoadingIndicator())
             : Column(children: [
                 Expanded(
                   child: ListView.builder(
@@ -125,8 +125,20 @@ class _CardsState extends State<Cards> {
                         [
                           SizedBox(
                             width: 100, height: 150,
-                            child: Image.network("https://dw0i2gv3d32l1.cloudfront.net/uploads/stage/stage_image/138228/optimized_large_thumb_stage.jpg")),
-                          Text(_bookList[index]['saleInfo']['buyLink'].toString())
+                            child: Image.network(_bookList[index]['volumeInfo']['imageLinks']['thumbnail'])),
+                            SizedBox(width: 30),
+                          Expanded(child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(_bookList[index]['volumeInfo']['title'].toString(), style:TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600
+                              )),
+                              Text(_bookList[index]['volumeInfo']['subtitle'].toString(), style:Theme.of(context).textTheme.subtitle2,),
+                              Text(_bookList[index]['volumeInfo']['publisher'].toString()),
+                              Text(_bookList[index]['volumeInfo']['pageCount'].toString() + " ★"),
+                            ],
+                          ))
                         ],
                       )
                     ),
