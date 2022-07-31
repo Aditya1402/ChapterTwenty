@@ -1,13 +1,19 @@
 import 'dart:convert';
-
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
+import 'package:seventh_word/config/colors.dart';
 import 'package:seventh_word/domain/custom_widgets/loadingIndicator.dart';
-import 'package:seventh_word/domain/services/remote_service.dart';
 import 'package:http/http.dart' as http;
+import 'package:seventh_word/domain/models/bookModel.dart';
+import 'package:seventh_word/pages/details/details.dart';
+
+final baseUri = Uri.parse("https://www.googleapis.com/books/v1/volumes");
 
 class Cards extends StatefulWidget {
+  String _genreType = " ";
+  String info;
+  Cards(this._genreType, this.info);
   @override
   State<Cards> createState() => _CardsState();
 }
@@ -27,7 +33,7 @@ class _CardsState extends State<Cards> {
   // We fetch the first 10 volumes
   int _page = 0;
   final int _limit = 10;
-  final _baseUrl = "https://www.googleapis.com/books/v1/volumes?q=Flutter";
+  late Uri _requestUri;
 
   var _bookList;
 
@@ -39,7 +45,7 @@ class _CardsState extends State<Cards> {
 
     try {
       final response =
-          await http.get(Uri.parse("$_baseUrl?_page=$_page&_limit=$_limit"));
+          await http.get(Uri.parse("$_requestUri?_page=$_page&_limit=$_limit"));
 
       setState(() {
         _bookList = jsonDecode(response.body)["items"];
@@ -58,7 +64,7 @@ class _CardsState extends State<Cards> {
     if (_hasNextPage == true &&
         _firstLoadRunning == false &&
         _loadMoreRunning == false &&
-        _controller.position.maxScrollExtent == _controller.offset) {
+        _controller.position.extentAfter < 300) {
       setState(() {
         _loadMoreRunning = true;
       });
@@ -66,14 +72,14 @@ class _CardsState extends State<Cards> {
       _page += 1;
 
       try {
-        final response =
-            await http.get(Uri.parse("$_baseUrl?_page=$_page&_limit=$_limit"));
+        final response = await http
+            .get(Uri.parse("$_requestUri?_page=$_page&_limit=$_limit"));
 
         final List fetchedPosts = jsonDecode(response.body)["items"];
 
         if (fetchedPosts.isNotEmpty) {
           setState(() {
-            _bookList.addAll(fetchedPosts);
+            _bookList.addAll(fetchedPosts)??null;
           });
         } else
         // There is no more data
@@ -96,6 +102,12 @@ class _CardsState extends State<Cards> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    _requestUri = baseUri.replace(
+      queryParameters: {
+        'q': widget._genreType,
+      },
+    );
+
     _firstLoad();
     _controller = ScrollController()..addListener(_loadMore);
   }
@@ -109,43 +121,168 @@ class _CardsState extends State<Cards> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        body: _firstLoadRunning
-            ? Center(child: LoadingIndicator())
-            : Column(children: [
-                Expanded(
-                  child: ListView.builder(
-                    controller: _controller,
-                    itemCount: _bookList.length,
-                    itemBuilder: (context, index) => Card(
-                      margin: const EdgeInsets.symmetric(
-                          vertical: 8, horizontal: 10),
-                      child: Row(
-                        children: 
-                        [
+    return _firstLoadRunning || _loadMoreRunning
+        ? Center(child: LoadingIndicator())
+        : Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text("${widget._genreType}",
+                            style: Theme.of(context).textTheme.headline1),
+                        Text(
+                          "${widget.info}",
+                          style: TextStyle(
+                            color: Palette.shadowGray,
+                            fontSize: 13,
+                          ),
+                        )
+                      ],
+                    ),
+                    Icon(CupertinoIcons.arrow_right)
+                  ],
+                ),
+              ),
+              SizedBox(height: 5),
+              SizedBox(
+                height: 245,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  shrinkWrap: true,
+                  controller: _controller,
+                  itemCount: _bookList.length,
+                  itemBuilder: (context, index) => Container(
+                    margin: EdgeInsets.only(left: 10),
+                    width: MediaQuery.of(context).size.width / 3.6,
+                    child: GestureDetector(
+                      onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: ((context) => DetailPage(
+                                    _bookList[index]['volumeInfo']['authors'],
+                                    _bookList[index]['volumeInfo']
+                                        ['averageRating'],
+                                    _bookList[index]['volumeInfo']
+                                        ['description'],
+                                    _bookList[index]['volumeInfo']['pageCount'],
+                                    _bookList[index]['volumeInfo']
+                                        ['previewLink'],
+                                    _bookList[index]['volumeInfo']
+                                        ['publishedDate'],
+                                    _bookList[index]['volumeInfo']['publisher'],
+                                    _bookList[index]['volumeInfo']['imageLinks']
+                                        ['thumbnail'],
+                                    _bookList[index]['volumeInfo']['title'],
+                                    _bookList[index]['saleInfo']['isEbook'],
+                                    _bookList[index]['accessInfo']['epub']['acsTokenLink'],
+                                    _bookList[index]['accessInfo']['webReaderLink'],
+                                  )))),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Align(
+                            alignment: Alignment.topRight,
+                            child: Container(
+                              height: 170,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(7),
+                                border: Border.all(
+                                    width: 0.75,
+                                    style: BorderStyle.solid,
+                                    color: Palette.cloudGray),
+                                image: DecorationImage(
+                                  fit: BoxFit.fill,
+                                  image: NetworkImage(_bookList[index]
+                                          ['volumeInfo']['imageLinks']
+                                      ['thumbnail']??"https://d827xgdhgqbnd.cloudfront.net/wp-content/uploads/2016/04/09121712/book-cover-placeholder.png"),
+                                ),
+                              ),
+                            ),
+                          ),
                           SizedBox(
-                            width: 100, height: 150,
-                            child: Image.network(_bookList[index]['volumeInfo']['imageLinks']['thumbnail'])),
-                            SizedBox(width: 30),
-                          Expanded(child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(_bookList[index]['volumeInfo']['title'].toString(), style:TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600
-                              )),
-                              Text(_bookList[index]['volumeInfo']['subtitle'].toString(), style:Theme.of(context).textTheme.subtitle2,),
-                              Text(_bookList[index]['volumeInfo']['publisher'].toString()),
-                              Text(_bookList[index]['volumeInfo']['pageCount'].toString() + " ★"),
-                            ],
-                          ))
+                            height: 5,
+                          ),
+                          Expanded(
+                              child: Text(
+                            _bookList[index]['volumeInfo']['title'],
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: Theme.of(context).textTheme.bodyText1,
+                          )),
+                          Expanded(
+                            child: Text(
+                              _bookList[index]['saleInfo']['listPrice'] != null
+                                  ? ("₹" +
+                                      _bookList[index]['saleInfo']['listPrice']
+                                              ['amount']
+                                          .toString())
+                                  : "",
+                              overflow: TextOverflow.fade,
+                              style: TextStyle(
+                                color: Palette.anchorGray,
+                                fontSize: 13,
+                              ),
+                            ),
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
                         ],
-                      )
+                      ),
                     ),
                   ),
                 ),
-                if (_loadMoreRunning == true) LoadingIndicator(),
-                if (_hasNextPage == false) Text("You have fetched all content!")
-              ]));
+              ),
+            ],
+          );
+    // if (_hasNextPage == false) Text("You have fetched all content!")
   }
 }
+
+
+
+
+
+// Card(
+//                   margin:
+//                       const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+//                   child: Row(
+//                     children: [
+//                       SizedBox(
+//                           width: 100,
+//                           height: 150,
+//                           child: Image.network(_bookList[index]['volumeInfo']
+//                               ['imageLinks']['thumbnail'])),
+//                       SizedBox(width: 30),
+//                       Expanded(
+//                           child: Column(
+//                         crossAxisAlignment: CrossAxisAlignment.start,
+//                         children: [
+//                           Text(
+//                               _bookList[index]['volumeInfo']['title']
+//                                   .toString(),
+//                               style: TextStyle(
+//                                   fontSize: 18, fontWeight: FontWeight.w600)),
+//                           Text(
+//                             _bookList[index]['volumeInfo']['subtitle']
+//                                 .toString(),
+//                             style: Theme.of(context).textTheme.subtitle2,
+//                           ),
+//                           Text(_bookList[index]['volumeInfo']['publisher']
+//                               .toString()),
+//                           Text(_bookList[index]['volumeInfo']['pageCount']
+//                                   .toString() +
+//                               " ★"),
+//                         ],
+//                       ))
+//                     ],
+//                   )),

@@ -11,6 +11,7 @@ class CustomWidgetTheme {
       // Button Theming
       elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
+            textStyle: TextStyle(fontSize: 15,fontWeight:FontWeight.w400,color: Colors.white, fontFamily: 'ProximaNova' ),
               elevation: 0,
               splashFactory: NoSplash.splashFactory,
               shape: RoundedRectangleBorder(
@@ -24,15 +25,16 @@ class CustomWidgetTheme {
 
 
       textTheme: TextTheme(
-        bodyText1: TextStyle(fontSize: 15, fontWeight: FontWeight.w400, color: Palette.pebbleBlack),
-        button: TextStyle(fontSize: 14,fontWeight:FontWeight.w500,color: Colors.white ),
+        bodyText1: TextStyle(fontSize: 13, fontWeight: FontWeight.w400, color: Palette.pebbleBlack),
+        button: TextStyle(fontSize: 15,fontWeight:FontWeight.w500,color: Colors.white ),
         bodyText2: TextStyle(fontSize: 16, fontWeight: FontWeight.w500, color: Palette.anchorGray),
-        headline1: TextStyle(fontSize: 23, fontWeight: FontWeight.w800, color: Palette.pebbleBlack),
+        headline1: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Palette.pebbleBlack),
         headline2: TextStyle(fontSize: 27, fontWeight: FontWeight.w800,color: Palette.pebbleBlack),
-        subtitle1: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Palette.anchorGray),
-        subtitle2: TextStyle(fontSize: 20, fontWeight: FontWeight.w700, color: Palette.azureBlue),
-        caption: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Palette.pebbleBlack)),
-    );
+        headline3: TextStyle(fontSize: 20, fontWeight: FontWeight.w600,color: Palette.pebbleBlack),
+        subtitle1: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Palette.pebbleBlack),
+        subtitle2: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Palette.anchorGray),
+        caption: TextStyle(fontSize: 14, fontWeight: FontWeight.w400, color: Palette.pebbleBlack),
+    ));
 
   }
 }

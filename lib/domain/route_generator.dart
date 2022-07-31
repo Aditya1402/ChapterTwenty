@@ -14,8 +14,8 @@ class RouteGenerator {
         return MaterialPageRoute(builder: ((context) => HomePage()));
       case '/searchPage':
         return MaterialPageRoute(builder: ((context) => SearchPage()));
-      case '/detailPage':
-        return MaterialPageRoute(builder: ((context) => DetailPage()));
+      // case '/detailPage':
+      //   return MaterialPageRoute(builder: ((context) => DetailPage()));
       default:
         // If there is no such mentioned route in the context
         return MaterialPageRoute(builder: ((context) => SearchPage()));

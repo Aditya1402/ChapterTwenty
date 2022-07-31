@@ -3,8 +3,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:seventh_word/config/colors.dart';
+import 'package:seventh_word/pages/home/widgets/tabBarView.dart';
 
 import 'view/homePageView.dart';
+import 'widgets/cards.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -49,7 +51,7 @@ class _HomePageState extends State<HomePage> {
                 ],
             body: TabBarView(
               children: [
-                HomePageView("All"),
+                TabBarPage(),
                 HomePageView("Books"),
                 HomePageView("Magazines"),
               ],
