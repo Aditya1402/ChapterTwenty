@@ -19,6 +19,7 @@ class Cards extends StatefulWidget {
 }
 
 class _CardsState extends State<Cards> {
+
   // Pagination Components
   late ScrollController _controller;
 
@@ -64,7 +65,7 @@ class _CardsState extends State<Cards> {
     if (_hasNextPage == true &&
         _firstLoadRunning == false &&
         _loadMoreRunning == false &&
-        _controller.position.extentAfter < 300) {
+        _controller.position.extentAfter < 100) {
       setState(() {
         _loadMoreRunning = true;
       });
@@ -79,7 +80,7 @@ class _CardsState extends State<Cards> {
 
         if (fetchedPosts.isNotEmpty) {
           setState(() {
-            _bookList.addAll(fetchedPosts)??null;
+            _bookList.addAll(fetchedPosts) ?? null;
           });
         } else
         // There is no more data
@@ -181,8 +182,10 @@ class _CardsState extends State<Cards> {
                                         ['thumbnail'],
                                     _bookList[index]['volumeInfo']['title'],
                                     _bookList[index]['saleInfo']['isEbook'],
-                                    _bookList[index]['accessInfo']['epub']['acsTokenLink'],
-                                    _bookList[index]['accessInfo']['webReaderLink'],
+                                    _bookList[index]['accessInfo']['epub']
+                                        ['acsTokenLink'],
+                                    _bookList[index]['accessInfo']
+                                        ['webReaderLink'],
                                   )))),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -201,9 +204,11 @@ class _CardsState extends State<Cards> {
                                     color: Palette.cloudGray),
                                 image: DecorationImage(
                                   fit: BoxFit.fill,
-                                  image: NetworkImage(_bookList[index]
-                                          ['volumeInfo']['imageLinks']
-                                      ['thumbnail']??"https://d827xgdhgqbnd.cloudfront.net/wp-content/uploads/2016/04/09121712/book-cover-placeholder.png"),
+                                  image: _bookList[index]['volumeInfo']['imageLinks']!=null
+                                        ? NetworkImage(_bookList[index]['volumeInfo']['imageLinks']['thumbnail'])
+                                        : NetworkImage("https://cdn.bookauthority.org/dist/images/book-cover-not-available.6b5a104fa66be4eec4fd16aebd34fe04.png")
+                                  
+                               
                                 ),
                               ),
                             ),
