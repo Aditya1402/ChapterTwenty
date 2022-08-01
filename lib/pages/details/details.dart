@@ -45,18 +45,21 @@ class _DetailPageState extends State<DetailPage> {
       appBar: CustomAppBar(),
       body: SingleChildScrollView(
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          SizedBox(
+          const SizedBox(
             height: 25,
           ),
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 15),
+            padding: const EdgeInsets.symmetric(horizontal: 15),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ClipRRect(
                     borderRadius: BorderRadius.circular(7),
-                    child: Image.network(widget.thumbnail)),
-                SizedBox(
+                    child: widget.thumbnail != null
+                        ? Image.network(widget.thumbnail)
+                        : Image.network(
+                            "https://cdn.bookauthority.org/dist/images/book-cover-not-available.6b5a104fa66be4eec4fd16aebd34fe04.png")),
+                const SizedBox(
                   width: 20,
                 ),
                 Expanded(
@@ -65,28 +68,28 @@ class _DetailPageState extends State<DetailPage> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        widget.title,
+                        widget.title ?? "",
                         style: Theme.of(context).textTheme.headline2,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 5,
                       ),
                       Text(widget.authors
                           .toString()
                           .replaceAll(RegExp(r'\['), "")
                           .replaceAll(RegExp(r'\]'), "")),
-                      SizedBox(
+                      const SizedBox(
                         height: 5,
                       ),
                       Text(
-                        widget.publisher.toString(),
+                        widget.publisher ?? "",
                         style: Theme.of(context).textTheme.subtitle1,
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 5,
                       ),
                       Text(
-                        widget.publishedDate.toString(),
+                        widget.publishedDate ?? "",
                         style: Theme.of(context).textTheme.subtitle2,
                       ),
                     ],
@@ -95,7 +98,7 @@ class _DetailPageState extends State<DetailPage> {
               ],
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 30,
           ),
           Container(
@@ -105,11 +108,11 @@ class _DetailPageState extends State<DetailPage> {
                 Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Icon(
+                    const Icon(
                       CupertinoIcons.star,
                       size: 15,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 5,
                     ),
                     Text(
@@ -120,18 +123,18 @@ class _DetailPageState extends State<DetailPage> {
                     )
                   ],
                 ),
-                Text(
+                const Text(
                   "│",
                   style: TextStyle(color: Palette.shadowGray),
                 ),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Icon(
+                    const Icon(
                       CupertinoIcons.doc_checkmark,
                       size: 16,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 5,
                     ),
                     Text(
@@ -140,7 +143,8 @@ class _DetailPageState extends State<DetailPage> {
                     )
                   ],
                 ),
-                Text("│", style: TextStyle(color: Palette.shadowGray)),
+                const Text("│",
+                    style: const TextStyle(color: Palette.shadowGray)),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -150,7 +154,7 @@ class _DetailPageState extends State<DetailPage> {
                           : widget.pageCount.toString(),
                       style: Theme.of(context).textTheme.bodyText1,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 5,
                     ),
                     Text(
@@ -162,7 +166,7 @@ class _DetailPageState extends State<DetailPage> {
               ],
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 25,
           ),
           Padding(
@@ -176,19 +180,19 @@ class _DetailPageState extends State<DetailPage> {
                           final url = widget.webRead;
                           if (await canLaunch(url)) {
                             print(url);
-                            await launch(url, forceWebView: true, enableJavaScript: true);
+                            await launch(url,
+                                forceWebView: true, enableJavaScript: true);
                           } else {
                             throw 'Could not launch $url';
                           }
                         },
-                        child: Text("Read Now"))),
-                SizedBox(
+                        child: const Text("Read Now"))),
+                const SizedBox(
                   width: 10,
                 ),
                 Expanded(
                     child: ElevatedButton(
-                        onPressed: 
-                        () async {
+                        onPressed: () async {
                           final url = widget.pdfLink;
                           if (await canLaunch(url)) {
                             print(url);
@@ -196,8 +200,8 @@ class _DetailPageState extends State<DetailPage> {
                           } else {
                             throw 'Could not launch $url';
                           }
-                        }
-                        , child: Text("Download"))),
+                        },
+                        child: const Text("Download"))),
               ],
             ),
           ),

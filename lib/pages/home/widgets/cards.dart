@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:seventh_word/config/colors.dart';
 import 'package:seventh_word/domain/custom_widgets/loadingIndicator.dart';
 import 'package:http/http.dart' as http;
-import 'package:seventh_word/domain/models/bookModel.dart';
 import 'package:seventh_word/pages/details/details.dart';
 
 final baseUri = Uri.parse("https://www.googleapis.com/books/v1/volumes");
@@ -19,7 +18,6 @@ class Cards extends StatefulWidget {
 }
 
 class _CardsState extends State<Cards> {
-
   // Pagination Components
   late ScrollController _controller;
 
@@ -102,7 +100,6 @@ class _CardsState extends State<Cards> {
   @override
   void initState() {
     // TODO: implement initState
-    super.initState();
     _requestUri = baseUri.replace(
       queryParameters: {
         'q': widget._genreType,
@@ -111,6 +108,7 @@ class _CardsState extends State<Cards> {
 
     _firstLoad();
     _controller = ScrollController()..addListener(_loadMore);
+    super.initState();
   }
 
   @override
@@ -140,18 +138,18 @@ class _CardsState extends State<Cards> {
                             style: Theme.of(context).textTheme.headline1),
                         Text(
                           "${widget.info}",
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: Palette.shadowGray,
                             fontSize: 13,
                           ),
                         )
                       ],
                     ),
-                    Icon(CupertinoIcons.arrow_right)
+                    const Icon(CupertinoIcons.arrow_right)
                   ],
                 ),
               ),
-              SizedBox(height: 5),
+              const SizedBox(height: 5),
               SizedBox(
                 height: 245,
                 child: ListView.builder(
@@ -160,7 +158,7 @@ class _CardsState extends State<Cards> {
                   controller: _controller,
                   itemCount: _bookList.length,
                   itemBuilder: (context, index) => Container(
-                    margin: EdgeInsets.only(left: 10),
+                    margin: const EdgeInsets.only(left: 10),
                     width: MediaQuery.of(context).size.width / 3.6,
                     child: GestureDetector(
                       onTap: () => Navigator.push(
@@ -203,17 +201,19 @@ class _CardsState extends State<Cards> {
                                     style: BorderStyle.solid,
                                     color: Palette.cloudGray),
                                 image: DecorationImage(
-                                  fit: BoxFit.fill,
-                                  image: _bookList[index]['volumeInfo']['imageLinks']!=null
-                                        ? NetworkImage(_bookList[index]['volumeInfo']['imageLinks']['thumbnail'])
-                                        : NetworkImage("https://cdn.bookauthority.org/dist/images/book-cover-not-available.6b5a104fa66be4eec4fd16aebd34fe04.png")
-                                  
-                               
-                                ),
+                                    fit: BoxFit.fill,
+                                    image: _bookList[index]['volumeInfo']
+                                                ['imageLinks'] !=
+                                            null
+                                        ? NetworkImage(_bookList[index]
+                                                ['volumeInfo']['imageLinks']
+                                            ['thumbnail'])
+                                        : const NetworkImage(
+                                            "https://cdn.bookauthority.org/dist/images/book-cover-not-available.6b5a104fa66be4eec4fd16aebd34fe04.png")),
                               ),
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 5,
                           ),
                           Expanded(
@@ -232,13 +232,13 @@ class _CardsState extends State<Cards> {
                                           .toString())
                                   : "",
                               overflow: TextOverflow.fade,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Palette.anchorGray,
                                 fontSize: 13,
                               ),
                             ),
                           ),
-                          SizedBox(
+                          const SizedBox(
                             width: 10,
                           ),
                         ],
@@ -249,45 +249,5 @@ class _CardsState extends State<Cards> {
               ),
             ],
           );
-    // if (_hasNextPage == false) Text("You have fetched all content!")
   }
 }
-
-
-
-
-
-// Card(
-//                   margin:
-//                       const EdgeInsets.symmetric(vertical: 8, horizontal: 10),
-//                   child: Row(
-//                     children: [
-//                       SizedBox(
-//                           width: 100,
-//                           height: 150,
-//                           child: Image.network(_bookList[index]['volumeInfo']
-//                               ['imageLinks']['thumbnail'])),
-//                       SizedBox(width: 30),
-//                       Expanded(
-//                           child: Column(
-//                         crossAxisAlignment: CrossAxisAlignment.start,
-//                         children: [
-//                           Text(
-//                               _bookList[index]['volumeInfo']['title']
-//                                   .toString(),
-//                               style: TextStyle(
-//                                   fontSize: 18, fontWeight: FontWeight.w600)),
-//                           Text(
-//                             _bookList[index]['volumeInfo']['subtitle']
-//                                 .toString(),
-//                             style: Theme.of(context).textTheme.subtitle2,
-//                           ),
-//                           Text(_bookList[index]['volumeInfo']['publisher']
-//                               .toString()),
-//                           Text(_bookList[index]['volumeInfo']['pageCount']
-//                                   .toString() +
-//                               " ★"),
-//                         ],
-//                       ))
-//                     ],
-//                   )),
